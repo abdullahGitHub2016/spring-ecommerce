@@ -2,30 +2,86 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>SwiftCart | Shop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwiftCart | Premium Shopping</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        .product-card img { height: 250px; object-fit: cover; }
-        footer { margin-top: 50px; }
+        :root { --sc-dark: #0f1111; --sc-nav: #232f3e; --sc-action: #ff9900; }
+        body { background-color: #eaeded; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        .navbar-main { background-color: var(--sc-dark); padding: 0.75rem 0; }
+        .navbar-sub { background-color: var(--sc-nav); color: white; font-size: 0.875rem; }
+        .search-container { border-radius: 4px; overflow: hidden; }
+        .search-input { border: none; height: 40px; }
+        .search-btn { background-color: var(--sc-action); border: none; width: 45px; transition: 0.2s; }
+        .search-btn:hover { background-color: #e68a00; }
+        .nav-box { color: white !important; padding: 8px 12px; border: 1px solid transparent; cursor: pointer; }
+        .nav-box:hover { border: 1px solid white; }
+        .cart-badge { background-color: var(--sc-action); color: var(--sc-dark); font-weight: 700; }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="/">SWIFTCART</a>
-    </div>
-</nav>
+<header>
+    <nav class="navbar-main text-white">
+        <div class="container-fluid px-lg-4">
+            <div class="row align-items-center g-2">
+                <div class="col-auto">
+                    <a class="navbar-brand fw-bold text-white fs-3 m-0" href="/">SWIFTCART</a>
+                </div>
 
-<main class="container my-5">
-    <div th:replace="~{__${content}__}">
-        <p>Loading content...</p>
-    </div>
+                <div class="col px-md-4">
+                    <form action="/search" method="get" class="input-group search-container">
+                        <button class="btn btn-light dropdown-toggle d-none d-md-block" type="button" style="font-size: 0.75rem; background: #f3f3f3;">All</button>
+                        <input type="text" name="query" class="form-control search-input" placeholder="Search for products, brands, and more">
+                        <button class="search-btn text-dark" type="submit"><i class="bi bi-search"></i></button>
+                    </form>
+                </div>
+
+                <div class="col-auto d-flex align-items-center">
+                    <div class="nav-box d-none d-lg-block">
+                        <div style="font-size: 0.7rem;">Hello, Sign in</div>
+                        <div class="fw-bold">Account & Orders</div>
+                    </div>
+                    <a href="/cart" class="nav-box d-flex align-items-center text-decoration-none">
+                        <div class="position-relative me-2">
+                            <i class="bi bi-cart3 fs-3"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill cart-badge">0</span>
+                        </div>
+                        <span class="fw-bold d-none d-md-inline">Cart</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <nav class="navbar-sub py-1">
+        <div class="container-fluid px-lg-4 d-flex overflow-auto text-nowrap">
+            <a href="#" class="nav-box text-decoration-none"><i class="bi bi-list me-1"></i> All Categories</a>
+            <a href="#" class="nav-box text-decoration-none">Hot Deals</a>
+            <a href="#" class="nav-box text-decoration-none">Electronics</a>
+            <a href="#" class="nav-box text-decoration-none">Customer Care</a>
+            <a href="#" class="nav-box text-decoration-none">Gift Solutions</a>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div th:replace="~{__${content}__}"></div>
 </main>
 
-<footer class="bg-light py-4 mt-auto border-top text-center">
-    <p>&copy; 2026 com.free_source.spring_ecommerce</p>
+<footer class="mt-auto bg-dark text-white pt-5">
+    <div class="container pb-4">
+        <div class="row text-center text-md-start">
+            <div class="col-md-4 mb-4">
+                <h5 class="fw-bold text-warning">SWIFTCART</h5>
+                <p class="small text-secondary">Your trusted partner for quality products delivered with speed and care.</p>
+            </div>
+            <div class="col-md-8 text-md-end">
+                <p class="small">&copy; 2026 com.free_source.spring_ecommerce | Professional Project</p>
+            </div>
+        </div>
+    </div>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
