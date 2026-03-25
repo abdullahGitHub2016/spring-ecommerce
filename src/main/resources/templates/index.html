@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content">
+    <h1>If you see this, it works!</h1>
+    <div th:each="p : ${products}">
+        <p th:text="${p.name}"></p>
+    </div>
+</div>
+</body>
+</html>
