@@ -28,14 +28,19 @@ public class HomeController {
     }
 
     @GetMapping("/product/{id}")
-    public String showProduct(@PathVariable Long id, Model model) {
-        // 1. Fetch the specific product
+    public String getProductDetails(@PathVariable Long id, Model model) {
+        // 1. Get the main product
         Product product = productService.getProductById(id);
+        
+        // 2. Get related products using the service
+        List<Product> relatedProducts = productService.getRelatedProducts(
+                product.getCategory(), 
+                product.getId()
+        );
+
         model.addAttribute("product", product);
-
-        // 2. Tell the layout to load 'details.html'
-        model.addAttribute("content", "details :: content");
-
-        return "layout";
+        model.addAttribute("relatedProducts", relatedProducts);
+        
+        return "details";
     }
 }

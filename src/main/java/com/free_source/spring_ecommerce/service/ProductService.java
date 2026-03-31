@@ -17,8 +17,13 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public com.free_source.spring_ecommerce.model.Product getProductById(Long id) {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+    public Product getProductById(Long id) {
+        return productRepository.findProductWithAllDetails(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+    }
+    
+    // Add this new method
+    public List<Product> getRelatedProducts(String category, Long currentProductId) {
+        return productRepository.findTop4ByCategoryAndIdNot(category, currentProductId);
     }
 }

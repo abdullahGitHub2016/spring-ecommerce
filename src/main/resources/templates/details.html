@@ -1,40 +1,188 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<body>
-<div th:fragment="content">
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-dark">Home</a></li>
-            <li class="breadcrumb-item active" th:text="${product.name}">Product Name</li>
-        </ol>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${product.name + ' - E-Commerce'}">Product Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-50 font-sans">
+
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a th:href="@{/}" class="text-2xl font-bold text-blue-600">DreamHomeBD</a>
+            <div class="space-x-6">
+                <a th:href="@{/}" class="text-gray-600 hover:text-blue-600">Home</a>
+                <a href="#" class="text-gray-600 hover:text-blue-600">Cart <i class="fa-solid fa-cart-shopping"></i></a>
+            </div>
+        </div>
     </nav>
 
-    <div class="row g-5">
-        <div class="col-md-6">
-            <img th:src="${product.imageUrl}" class="img-fluid rounded-4 shadow-sm" alt="Product Image">
-        </div>
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <nav class="flex mb-8 text-sm text-gray-500">
+            <a th:href="@{/}" class="hover:text-blue-600">Shop</a>
+            <span class="mx-2">/</span>
+            <span th:text="${product.category}">Category</span>
+            <span class="mx-2">/</span>
+            <span class="text-gray-900 font-medium" th:text="${product.name}">Product Name</span>
+        </nav>
 
-        <div class="col-md-6">
-            <h1 class="display-5 fw-bold" th:text="${product.name}">Product Name</h1>
-            <h2 class="text-primary my-3">$<span th:text="${product.price}">0.00</span></h2>
-            <p class="lead text-muted" th:text="${product.description}">Detailed description...</p>
-
-            <hr class="my-4">
-
-            <form th:action="@{/cart/add}" method="post" class="row g-3">
-                <input type="hidden" name="productId" th:value="${product.id}">
-                <div class="col-auto">
-                    <label class="form-label fw-bold">Quantity</label>
-                    <input type="number" name="quantity" class="form-control" value="1" min="1" max="10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 bg-white p-8 rounded-2xl shadow-sm">
+            <div class="space-y-4">
+                <div class="aspect-square bg-gray-100 rounded-xl overflow-hidden">
+                    <img th:src="${product.imageUrl}" th:alt="${product.name}" class="w-full h-full object-cover">
                 </div>
-                <div class="col-12 mt-4">
-                    <button type="submit" class="btn btn-dark btn-lg px-5 shadow">
-                        <i class="bi bi-cart-plus me-2"></i>Add to Cart
+            </div>
+
+            <div class="flex flex-col">
+                <h1 class="text-3xl font-extrabold text-gray-900 mb-2" th:text="${product.name}">Product Name</h1>
+                <p class="text-2xl font-bold text-blue-600 mb-6" th:text="${'$' + product.price}">$0.00</p>
+
+                <div class="prose prose-sm text-gray-600 mb-8">
+                    <p th:text="${product.description}">Product description goes here...</p>
+                </div>
+
+                <div class="mb-8" th:if="${not #lists.isEmpty(product.variants)}">
+                    <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">Select Option</h3>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div th:each="variant : ${product.variants}">
+                            <input type="radio" th:id="${'v-' + variant.id}" name="variant" class="hidden peer"
+                                th:value="${variant.id}">
+                            <label th:for="${'v-' + variant.id}"
+                                class="block text-center py-3 border-2 rounded-lg cursor-pointer hover:bg-gray-50 peer-checked:border-blue-600 peer-checked:bg-blue-50 transition-all">
+                                <span class="block font-medium" th:text="${variant.variantName}">Standard</span>
+                                <span class="text-xs text-gray-500" th:text="${'$' + variant.price}">$0</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-8" th:if="${not #lists.isEmpty(product.features)}">
+                    <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-4">Key Features</h3>
+                    <ul class="space-y-2">
+                        <li th:each="feature : ${product.features}" class="flex items-center text-gray-600 text-sm">
+                            <i class="fa-solid fa-check text-green-500 mr-2"></i>
+                            <span th:text="${feature}">Feature</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="flex gap-4 mt-auto">
+                    <button
+                        class="flex-1 bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">
+                        Add to Cart
+                    </button>
+                    <button class="px-6 py-4 border-2 border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                        <i class="fa-regular fa-heart text-xl"></i>
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
+
+        <div class="mt-12 space-y-4" th:if="${not #lists.isEmpty(product.specifications)}">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 px-2">Technical Specifications</h2>
+        
+            <div th:each="spec, iterStat : ${product.specifications}">
+                
+                <th:block th:if="${iterStat.index == 0 or spec.specGroup != product.specifications[iterStat.index - 1].specGroup}">
+                    
+                    <details class="group bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm open:shadow-md transition-all duration-300" 
+                             th:open="${iterStat.index == 0}"> <summary class="flex items-center justify-between px-6 py-4 cursor-pointer list-none hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center space-x-3">
+                                <span class="p-2 bg-blue-50 rounded-lg">
+                                    <i th:class="${spec.specGroup == 'Display' ? 'fa-solid fa-desktop' : 
+                                                   (spec.specGroup == 'Battery' ? 'fa-solid fa-battery-full' : 'fa-solid fa-microchip')} + ' text-blue-600'"></i>
+                                </span>
+                                <span class="font-bold text-gray-800 uppercase tracking-wide text-sm" th:text="${spec.specGroup}">GROUP NAME</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300 group-open:rotate-180"></i>
+                        </summary>
+        
+                        <div class="px-6 pb-6 pt-2 border-t border-gray-50">
+                            <table class="min-w-full">
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr th:each="innerSpec : ${product.specifications}" 
+                                        th:if="${innerSpec.specGroup == spec.specGroup}"
+                                        class="hover:bg-gray-50/50 transition-colors">
+                                        <td class="w-1/3 py-3 text-sm font-semibold text-gray-500" th:text="${innerSpec.specKey}">Key</td>
+                                        <td class="w-2/3 py-3 text-sm text-gray-900 pl-4" th:text="${innerSpec.specValue}">Value</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+        
+                </th:block>
+            </div>
+        </div>
+
+
+
+        <section class="mt-16" th:if="${not #lists.isEmpty(relatedProducts)}">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-bold text-gray-900">You May Also Like</h2>
+                <span class="h-1 flex-1 bg-gray-100 mx-6 hidden md:block"></span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                <div th:each="related : ${relatedProducts}"
+                    class="group bg-white border rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300">
+                    <div class="aspect-square relative overflow-hidden">
+                        <img th:src="${related.imageUrl}" th:alt="${related.name}"
+                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    </div>
+                    <div class="p-4">
+                        <p class="text-xs text-blue-600 font-bold uppercase mb-1" th:text="${related.category}">Category
+                        </p>
+                        <h3 class="font-bold text-gray-900 mb-2 truncate">
+                            <a th:href="@{'/product/' + ${related.id}}" th:text="${related.name}"
+                                class="hover:text-blue-600">Product Name</a>
+                        </h3>
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-gray-900" th:text="${'$' + related.price}">$0.00</span>
+                            <button
+                                class="p-2 bg-gray-100 rounded-full hover:bg-blue-600 hover:text-white transition-colors">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900 text-white mt-20 py-12">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-gray-400">&copy; 2026 DreamHomeBD E-Commerce Platform. All rights reserved.</p>
+        </div>
+    </footer>
+
 </body>
+
+<script>
+    function toggleSpecs() {
+        const container = document.getElementById('spec-container');
+        const gradient = document.getElementById('spec-gradient');
+        const btnText = document.getElementById('btn-text');
+        const btnIcon = document.getElementById('btn-icon');
+
+        if (container.style.maxHeight === 'none') {
+            // COLLAPSE
+            container.style.maxHeight = '400px';
+            gradient.classList.remove('hidden');
+            btnText.innerText = 'See More';
+            btnIcon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+        } else {
+            // EXPAND
+            container.style.maxHeight = 'none';
+            gradient.classList.add('hidden');
+            btnText.innerText = 'See Less';
+            btnIcon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+        }
+    }
+</script>
+
 </html>
