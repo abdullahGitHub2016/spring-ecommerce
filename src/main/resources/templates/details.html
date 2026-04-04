@@ -82,42 +82,30 @@
             </div>
         </div>
 
-        <div class="mt-12 space-y-4" th:if="${not #lists.isEmpty(product.specifications)}">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6 px-2">Technical Specifications</h2>
-        
-            <div th:each="spec, iterStat : ${product.specifications}">
-                
-                <th:block th:if="${iterStat.index == 0 or spec.specGroup != product.specifications[iterStat.index - 1].specGroup}">
-                    
-                    <details class="group bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm open:shadow-md transition-all duration-300" 
-                             th:open="${iterStat.index == 0}"> <summary class="flex items-center justify-between px-6 py-4 cursor-pointer list-none hover:bg-gray-50 transition-colors">
-                            <div class="flex items-center space-x-3">
-                                <span class="p-2 bg-blue-50 rounded-lg">
-                                    <i th:class="${spec.specGroup == 'Display' ? 'fa-solid fa-desktop' : 
-                                                   (spec.specGroup == 'Battery' ? 'fa-solid fa-battery-full' : 'fa-solid fa-microchip')} + ' text-blue-600'"></i>
-                                </span>
-                                <span class="font-bold text-gray-800 uppercase tracking-wide text-sm" th:text="${spec.specGroup}">GROUP NAME</span>
-                            </div>
-                            <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300 group-open:rotate-180"></i>
-                        </summary>
-        
-                        <div class="px-6 pb-6 pt-2 border-t border-gray-50">
-                            <table class="min-w-full">
-                                <tbody class="divide-y divide-gray-100">
-                                    <tr th:each="innerSpec : ${product.specifications}" 
-                                        th:if="${innerSpec.specGroup == spec.specGroup}"
-                                        class="hover:bg-gray-50/50 transition-colors">
-                                        <td class="w-1/3 py-3 text-sm font-semibold text-gray-500" th:text="${innerSpec.specKey}">Key</td>
-                                        <td class="w-2/3 py-3 text-sm text-gray-900 pl-4" th:text="${innerSpec.specValue}">Value</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </details>
-        
-                </th:block>
+        <div class="mt-12 space-y-4" th:if="${not #maps.isEmpty(groupedSpecs)}">
+    <h2 class="text-2xl font-bold text-gray-900 mb-6 px-2">Technical Specifications</h2>
+
+    <div th:each="entry : ${groupedSpecs}">
+        <details class="group bg-white rounded-xl border border-gray-200 shadow-sm" open>
+            
+            <summary class="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-gray-50">
+                <span class="font-bold text-gray-800 uppercase text-sm" th:text="${entry.key}">GROUP NAME</span>
+                <i class="fa-solid fa-chevron-down text-gray-400 group-open:rotate-180 transition-transform"></i>
+            </summary>
+
+            <div class="px-6 pb-6 pt-2 border-t border-gray-50">
+                <table class="min-w-full">
+                    <tbody class="divide-y divide-gray-100">
+                        <tr th:each="spec : ${entry.value}" class="hover:bg-gray-50/50">
+                            <td class="w-1/3 py-3 text-sm font-semibold text-gray-500" th:text="${spec.specKey}">Key</td>
+                            <td class="w-2/3 py-3 text-sm text-gray-900 pl-4" th:text="${spec.specValue}">Value</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
+        </details>
+    </div>
+</div>
 
 
 

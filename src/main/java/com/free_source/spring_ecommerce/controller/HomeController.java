@@ -29,18 +29,11 @@ public class HomeController {
 
     @GetMapping("/product/{id}")
     public String getProductDetails(@PathVariable Long id, Model model) {
-        // 1. Get the main product
         Product product = productService.getProductById(id);
-        
-        // 2. Get related products using the service
-        List<Product> relatedProducts = productService.getRelatedProducts(
-                product.getCategory(), 
-                product.getId()
-        );
 
+        // Pass the grouped map instead of the raw list
+        model.addAttribute("groupedSpecs", productService.getGroupedSpecifications(id));
         model.addAttribute("product", product);
-        model.addAttribute("relatedProducts", relatedProducts);
-        
         return "details";
     }
 }
